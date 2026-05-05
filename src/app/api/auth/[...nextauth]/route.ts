@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs'
 // In-memory user store (replace with DB in production)
 const users: Array<{ id: string; name: string; email: string; password: string; image?: string }> = []
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -70,5 +70,5 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET || 'devaudit-secret-change-in-production',
 }
 
-const handler = NextAuth(authOptions)
+const handler = NextAuth(authOptions as NextAuthOptions)
 export { handler as GET, handler as POST }
