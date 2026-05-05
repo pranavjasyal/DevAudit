@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { v4 as uuidv4 } from 'uuid'
+import type { Vulnerability, SyntaxError } from '@/types'
+import { generateFix } from './fix'
 
 export async function POST(req: NextRequest) {
   try {
@@ -61,11 +63,46 @@ Find: secrets, injection, XSS, auth bugs, crypto flaws, syntax errors, missing c
     console.log('Raw Ollama FULL:', rawText.substring(0, 1000))
     
     const parsed = {
-      summary: 'AI security scan complete',
-      securityScore: rawText.includes('vulnerab') ? 45 : 80,
+      summary: rawText.includes('vulnerab') || rawText.includes('issue') ? 'Found security issues' : 'Code looks clean',
+      securityScore: 75,
       syntaxErrors: [],
       vulnerabilities: [],
       language
+    }
+
+    // Enhanced parsing for numbered list format "1. Type: description"
+    const issueR = /(\d+\.\s*)([^:\n]+?):\s*(.+?)(?=\n\d\.|\n\n|\n$|$)/gis
+    let issueM
+    const severityMap: Record<string, string> = {
+      'Injection': 'HIGH', 'XSS': 'HIGH', 'SQL': 'HIGH', 'Command': 'HIGH',
+      'Auth': 'HIGH', 'Authentication': 'HIGH', 'Authorization': 'HIGH',
+      'Syntax': 'LOW', 'Missing': 'LOW', 'Error': 'LOW', 'Hardcoded': 'MEDIUM',
+      'Crypto': 'MEDIUM', 'Secret': 'CRITICAL', 'Path': 'HIGH'
+    }
+    
+    while ((issueM = issueR.exec(rawText)) !== null) {
+      const type = issueM[2].trim()
+      const desc = issueM[3].trim()
+      const sev = severityMap[type] || 'MEDIUM'
+      
+      if (type.toLowerCase().includes('syntax') || desc.toLowerCase().includes('missing') || desc.includes('(')) {
+        parsed.syntaxErrors.push({
+          line: '2',
+          error: type,
+          fix: 'Add missing parenthesis/quote/colon. Check indentation.'
+        })
+      } else {
+        const fix = generateFix(type)
+        parsed.vulnerabilities.push({
+          id: `V${parsed.vulnerabilities.length + 1}`,
+          title: `${sev} ${type}`,
+          severity: sev as any,
+          category: 'Ollama AI',
+          description: desc,
+          snippet: code.split('\n')[0],
+          fix
+        })
+      }
     }
 
     // Parse "1. Syntax error..." → syntaxErrors[]

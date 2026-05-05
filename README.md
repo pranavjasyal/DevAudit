@@ -1,12 +1,12 @@
 # DevAudit — AI Code Vulnerability Scanner
 
-A production-ready, full-stack Next.js application that uses **Claude AI** to scan code for security vulnerabilities, provide detailed explanations, and suggest fixes.
+A production-ready, full-stack Next.js application that uses **Ollama (CodeLlama)** for **local/free** AI-powered code vulnerability scanning, syntax analysis, and security audits across 16+ languages.
 
 ---
 
 ## Features
 
-Uses Claude 3.5 Sonnet to detect 50+ vulnerability types
+**AI-Powered Scanning** — Uses Ollama CodeLlama (local, free) to detect vulnerabilities, syntax errors across 16+ languages
 - **Authentication** — Email/password + GitHub OAuth + Google OAuth (via NextAuth.js)
 - **16+ Languages** — JS, TS, Python, Java, Go, Rust, PHP, Ruby, SQL, Bash, C/C++, C#, Kotlin, Swift, Solidity, YAML
 - **File Upload + Drag & Drop** — Upload code files directly
@@ -38,12 +38,11 @@ cp .env.example .env.local
 Edit `.env.local`:
 
 ```env
-# Required
-ANTHROPIC_API_KEY=sk-ant-your-key-here
+# No API key needed for Ollama (local)
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=`openssl rand -base64 32`
 
-# Optional OAuth (get from GitHub/Google developer console)
+# Optional OAuth
 GITHUB_CLIENT_ID=your-github-client-id
 GITHUB_CLIENT_SECRET=your-github-client-secret
 GOOGLE_CLIENT_ID=your-google-client-id
@@ -62,11 +61,11 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## Getting API Keys
 
-### Anthropic API Key
-1. Go to [console.anthropic.com](https://console.anthropic.com)
-2. Create an account and add billing
-3. Generate an API key under "API Keys"
-4. Add to `.env.local` as `ANTHROPIC_API_KEY`
+### Setup Ollama (for scanning)
+1. Download: https://ollama.com
+2. `ollama pull codellama:7b-instruct-q4_0`
+3. `ollama serve` (run before scanning)
+4. **100% local/free – no API key needed!**
 
 ### GitHub OAuth (optional)
 1. Go to GitHub → Settings → Developer Settings → OAuth Apps → New OAuth App
@@ -90,7 +89,7 @@ Open [http://localhost:3000](http://localhost:3000)
 | Language | TypeScript |
 | Styling | Tailwind CSS |
 | Auth | NextAuth.js v4 |
-AI | Anthropic Claude 3.5 Sonnet
+| AI | Ollama + CodeLlama (local, free)
 | Icons | Lucide React |
 | Date utils | date-fns |
 
