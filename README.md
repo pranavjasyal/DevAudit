@@ -6,7 +6,7 @@ A production-ready, full-stack Next.js application that uses **Claude AI** to sc
 
 ## Features
 
-- **AI-Powered Scanning** — Uses Claude claude-sonnet-4-5 to detect 50+ vulnerability types
+Uses Claude 3.5 Sonnet to detect 50+ vulnerability types
 - **Authentication** — Email/password + GitHub OAuth + Google OAuth (via NextAuth.js)
 - **16+ Languages** — JS, TS, Python, Java, Go, Rust, PHP, Ruby, SQL, Bash, C/C++, C#, Kotlin, Swift, Solidity, YAML
 - **File Upload + Drag & Drop** — Upload code files directly
@@ -24,7 +24,7 @@ A production-ready, full-stack Next.js application that uses **Claude AI** to sc
 ### 1. Clone and install
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/yourusername/devaudit.git
 cd devaudit
 npm install
 ```
@@ -41,7 +41,7 @@ Edit `.env.local`:
 # Required
 ANTHROPIC_API_KEY=sk-ant-your-key-here
 NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=run-openssl-rand-base64-32-to-generate
+NEXTAUTH_SECRET=`openssl rand -base64 32`
 
 # Optional OAuth (get from GitHub/Google developer console)
 GITHUB_CLIENT_ID=your-github-client-id
@@ -90,7 +90,7 @@ Open [http://localhost:3000](http://localhost:3000)
 | Language | TypeScript |
 | Styling | Tailwind CSS |
 | Auth | NextAuth.js v4 |
-| AI | Anthropic Claude claude-sonnet-4-5 |
+AI | Anthropic Claude 3.5 Sonnet
 | Icons | Lucide React |
 | Date utils | date-fns |
 
